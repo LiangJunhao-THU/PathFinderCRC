@@ -41,6 +41,10 @@ The pipeline expects the following data structure:
 
 ## Pipeline Steps
 
+### Step 0: Download TCGA_CRC processed .npy files
+Download link: https://cloud.tsinghua.edu.cn/f/a1c87bb480eb4eae9bd2/?dl=1
+Then unzip the file.
+
 ### Step 1: Generate Combined Dataset
 Run generate_combined_data.py to create the initial combined dataset:
 ```bash
