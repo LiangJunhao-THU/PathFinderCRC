@@ -51,15 +51,7 @@ def main():
     info_path = os.path.join(base_dir, 'TCGA_CRC_info.csv')
     npy_dir = os.path.join(base_dir, 'TCGA_CRC')
     output_path = os.path.join(base_dir, 'new_TCGA_CRC_clinic.csv')
-    
-    # # Check if output file already exists
-    # if os.path.exists(output_path):
-    #     print(f"Warning: {output_path} already exists!")
-    #     user_input = input("Do you want to overwrite it? (y/n): ")
-    #     if user_input.lower() != 'y':
-    #         print("Operation cancelled.")
-    #         return
-    
+
     # Load clinical data
     print("Loading clinical data...")
     clinical_df = pd.read_csv(info_path)
