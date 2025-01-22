@@ -12,6 +12,7 @@ This project provides a pipeline for analyzing tissue composition and survival o
 │   ├── main.py                    # Main analysis script
 │   ├── tissue_analysis.py         # Functions for tissue fraction calculation
 │   └── survival_analysis.py       # Survival analysis implementations
+├── TCGA_CRC/                      # Download TCGA_CRC processed .npy files
 ```
 
 ## Requirements
@@ -43,7 +44,7 @@ The pipeline expects the following data structure:
 
 ### Step 0: Download TCGA_CRC processed .npy files
 Download link: https://cloud.tsinghua.edu.cn/f/a1c87bb480eb4eae9bd2/?dl=1
-Then unzip the file.
+Then extract the files to the current path.
 
 ### Step 1: Generate Combined Dataset
 Run generate_combined_data.py to create the initial combined dataset:
