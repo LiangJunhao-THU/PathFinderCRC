@@ -15,15 +15,21 @@ def main():
     print("Performing survival analysis...")
     cox_model, analysis_df = perform_cox_analysis(final_df)
     
-    # Generate plots
-    print("Generating plots...")
-    cox_summary = plot_forest_plot(cox_model, os.path.join(output_dir, 'multivariate_forest_plot.png'))
-    plot_significant_km_curve(final_df, analysis_df, cox_summary, 
-                            os.path.join(output_dir, 'significant_var_survival.png'))
+    # # Generate plots
+    # print("Generating plots...")
+    # cox_summary = plot_forest_plot(cox_model, os.path.join(output_dir, 'multivariate_forest_plot.png'))
+    # plot_significant_km_curve(final_df, analysis_df, cox_summary, 
+    #                         os.path.join(output_dir, 'significant_var_survival.png'))
     
     # Print detailed results
     print("\nCox Regression Results:")
     print(cox_summary)
+
+    # Output variables with p < 0.05 and their hazard ratios
+    significant_vars = cox_summary[cox_summary['p'] < 0.05]
+    print("\nSignificant Variables (p < 0.05) and their Hazard Ratios:")
+    for index, row in significant_vars.iterrows():
+        print(f"Variable: {index}, Hazard Ratio: {row['exp(coef)']}, p-value: {row['p']}")
     
     print("\nAnalysis completed successfully!")
 
