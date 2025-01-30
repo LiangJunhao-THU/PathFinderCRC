@@ -45,6 +45,15 @@ The pipeline expects the following data structure:
 ### Step 0: Download TCGA_CRC processed .npy files
 Download link: https://cloud.tsinghua.edu.cn/f/a1c87bb480eb4eae9bd2/?dl=1
 Then extract the files to the current path.
+External test:
+CPTAC processed .npy file download link: https://drive.google.com/file/d/1shCsgWP4ctbcMoZ3CVelfh49AXa0RcJT/view?usp=drive_link
+CPTAC clinical info download link: https://drive.google.com/file/d/1J1vaqeS3m4LH3PJP0VXsKNLiK7p0qI6R/view?usp=drive_link
+Note: CPTAC only has OS and PFS information.
+
+
+
+
+
 
 ### Step 1: Generate Combined Dataset
 Run generate_combined_data.py to create the initial combined dataset:
