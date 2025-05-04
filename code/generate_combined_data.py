@@ -3,7 +3,11 @@ import pandas as pd
 import numpy as np
 from tissue_analysis import str_fraction, mus_fraction, tum_fraction
 
-def calculate_tissue_fractions(npy_dir, clinical_df, output_path):
+def calculate_tissue_fractions(npy_dir, clinical_df, filename_to_patient_id_df, output_path, scores_to_score_func={
+    'str_fraction': str_fraction,
+    'mus_fraction': mus_fraction,
+    'tum_fraction': tum_fraction
+}):
     """Calculate tissue fractions and merge with clinical data"""
     print("Calculating tissue fractions...")
     results = []
@@ -12,15 +16,13 @@ def calculate_tissue_fractions(npy_dir, clinical_df, output_path):
     
     for filename in os.listdir(npy_dir):
         if filename.endswith('.npy'):
-            patient_id = '-'.join(filename.split('-')[:3])
+            patient_id = filename_to_patient_id_df[filename_to_patient_id_df['FILENAME'] == filename]['PATIENT'].values[0]
             npy_path = os.path.join(npy_dir, filename)
             
             # Calculate fractions
             results.append({
                 'PATIENT': patient_id,
-                'str_fraction': str_fraction(npy_path),
-                'mus_fraction': mus_fraction(npy_path),
-                'tum_fraction': tum_fraction(npy_path)
+                **{k: v(npy_path) for k, v in scores_to_score_func.items()}
             })
             
             # Update progress
@@ -49,15 +51,17 @@ def main():
     # Set paths
     base_dir = '/mnt/bulk-saturn/junhao/pathfinder_cre/reproduce'
     info_path = os.path.join(base_dir, 'TCGA_CRC_info.csv')
+    filename_to_patient_id_path = os.path.join(base_dir, 'TCGA_CRC_files.csv')
     npy_dir = os.path.join(base_dir, 'TCGA_CRC')
     output_path = os.path.join(base_dir, 'new_TCGA_CRC_clinic.csv')
 
     # Load clinical data
     print("Loading clinical data...")
     clinical_df = pd.read_csv(info_path)
+    filename_to_patient_id_df = pd.read_csv(filename_to_patient_id_path)
     
     # Calculate fractions and generate combined dataset
-    final_df = calculate_tissue_fractions(npy_dir, clinical_df, output_path)
+    final_df = calculate_tissue_fractions(npy_dir, clinical_df, filename_to_patient_id_df, output_path)
     
     # Print summary statistics
     print("\nSummary of tissue fractions:")
