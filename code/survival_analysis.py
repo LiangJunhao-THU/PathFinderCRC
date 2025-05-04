@@ -5,28 +5,26 @@ from lifelines import KaplanMeierFitter
 from lifelines.statistics import logrank_test
 import matplotlib.pyplot as plt
 
-def perform_cox_analysis(df):
+def perform_cox_analysis(df, duration_col="DSS.time", event_col="DSS", score_cols=("str_fraction", "mus_fraction", "tum_fraction"), binary_cols=("MSI",)):
     """Perform Cox proportional hazards regression analysis"""
     # Prepare data
-    analysis_df = df[['DSS.time', 'DSS', 'str_fraction', 'mus_fraction', 
-                      'tum_fraction', 'MSI']].copy()
+    analysis_df = df[[duration_col, event_col, *score_cols, *binary_cols]].copy()
     
     # Convert time to months
-    analysis_df['DSS.time'] = analysis_df['DSS.time'] / 30.44
+    analysis_df[duration_col] = analysis_df[duration_col] / 30.44
     
     # Binarize continuous variables
-    for col in ['str_fraction', 'mus_fraction', 'tum_fraction']:
+    for col in score_cols:
         median = analysis_df[col].median()
         analysis_df[f'{col}_binary'] = (analysis_df[col] > median).astype(int)
     
     # Prepare final analysis data
-    final_analysis_df = analysis_df[['DSS.time', 'DSS', 'str_fraction_binary',
-                                   'mus_fraction_binary', 'tum_fraction_binary', 'MSI']]
+    final_analysis_df = analysis_df[[duration_col, event_col, *[f"{col}_binary" for col in score_cols], *binary_cols]]
     final_analysis_df = final_analysis_df.dropna()
     
     # Fit Cox model
     cph = CoxPHFitter()
-    cph.fit(final_analysis_df, duration_col='DSS.time', event_col='DSS')
+    cph.fit(final_analysis_df, duration_col=duration_col, event_col=event_col)
     
     return cph, final_analysis_df
 
